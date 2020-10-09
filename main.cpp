@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     Graph Graph(dictionary);
     cout << endl;
 
-    cout << "number of connected components: " << Graph.numConnectedComponents() << endl;
+    // cout << "number of connected components: " << Graph.numConnectedComponents() << endl;
     Graph.createAdjacencyList();
     // cout << "size of connected component at i: " << Graph.sizeOfConnectedComponent(0) << endl;
     // cout << "size of Graph: " << Graph.size() << endl;
@@ -79,6 +79,7 @@ int main(int argc, char *argv[])
     // cout << "pfs ladder from start words to target word: " << endl;
     // Graph.pfsPathFromTo("tate", "fade", ladder);
     // Graph.printVector(ladder);
-    Graph.bfsPathFromTo("mate", "kate", ladder);
+    // Graph.bfsPathFromTo("made", "bate", ladder);
+    Graph.longestLadder();
     return 0;
 }

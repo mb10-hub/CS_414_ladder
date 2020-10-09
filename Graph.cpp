@@ -176,8 +176,8 @@ bool Graph::ladderExists(string startWord, string targetWord)
                 return true;
             }
         }
-        return false;
     }
+    return false;
 }
 
 void Graph::pfs_helper(int start, int target, vector<string> &ladder, int top, bool foundLadder)
@@ -284,18 +284,6 @@ void Graph::pfsPathFromTo(string startWord, string targetWord, vector<string> &l
 //     }
 // }
 
-void Graph::removeFromList(vector<string> &ladder, string word)
-{
-
-    for (int i = 0; i < ladder.size(); i++)
-    {
-        if (ladder[i] == word)
-        {
-            ladder.erase(ladder.begin() + i);
-        }
-    }
-}
-
 Node *Graph::newNode(int index, Node *parent_index)
 {
     Node *temp = new Node;
@@ -318,12 +306,12 @@ void Graph::printLadder(Node *grandChild)
 
     for (int i = ladder.size() - 1; i >= 0; i--)
     {
-        cout << iter << ": " << listOfWords[ladder[i]] << endl;
+        cout << iter + 1 << ": " << listOfWords[ladder[i]] << endl;
         iter++;
     }
 }
 
-void Graph::printMin_Paths(vector<tuple<int, int>> &depths_target_vect, vector<Node *> &minPaths)
+int Graph::printMin_Paths(vector<tuple<int, int>> &depths_target_vect, vector<Node *> &minPaths)
 {
     int min = 1000;
     int startAfter_i = 0;
@@ -346,9 +334,10 @@ void Graph::printMin_Paths(vector<tuple<int, int>> &depths_target_vect, vector<N
     {
         printLadder(minPaths[startAfter_i]);
     }
+    return numMins;
 }
 
-void Graph::numMin_paths(Node *root, vector<string> &ladder, int target, int numMin)
+void Graph::num_paths(Node *root, vector<Node *> &Paths, vector<tuple<int, int>> &depths_target_vect, int target)
 {
     if (root == nullptr)
     {
@@ -360,11 +349,8 @@ void Graph::numMin_paths(Node *root, vector<string> &ladder, int target, int num
     Node *curr = nullptr;
     int sizeOfLevel = 0;
     int depthOfTarget = 0; // can be used for max depth aka longest path
-    vector<tuple<int, int>> depths_target_vect;
     bool targetFound = false;
     int numTargetFoundAtLevel = 0;
-    int min = 10000;
-    vector<Node *> minPaths;
 
     while (!q_node.empty())
     {
@@ -375,7 +361,6 @@ void Graph::numMin_paths(Node *root, vector<string> &ladder, int target, int num
 
             curr = q_node.front();
             q_node.pop();
-            cout << curr->index << endl;
 
             for (int i = 0; i < curr->child.size(); i++)
             {
@@ -384,7 +369,7 @@ void Graph::numMin_paths(Node *root, vector<string> &ladder, int target, int num
                 {
                     numTargetFoundAtLevel++;
                     targetFound = true;
-                    minPaths.push_back(curr->child[i]);
+                    Paths.push_back(curr->child[i]);
                 }
             }
             sizeOfLevel--;
@@ -392,21 +377,16 @@ void Graph::numMin_paths(Node *root, vector<string> &ladder, int target, int num
         depthOfTarget++;
         if (targetFound)
         {
-            // if (depthOfTarget < min)
-            // {
-            min = depthOfTarget;
             depths_target_vect.push_back(make_tuple(numTargetFoundAtLevel, depthOfTarget));
             numTargetFoundAtLevel = 0;
-            // }
             targetFound = false;
         }
     }
-    cout << "STOP" << endl;
-    printMin_Paths(depths_target_vect, minPaths);
 }
 
 int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &ladder)
 {
+    // Initializations
     tuple<int, int> Start_End = indexOfStart_Target(startWord, targetWord);
     int start = get<0>(Start_End);
     int target = get<1>(Start_End);
@@ -419,11 +399,13 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
     Node *curr = nullptr;
     int i_curr_children = 0;
     int i_Alist = 0;
+    vector<Node *> Paths;
+    vector<tuple<int, int>> depths_target_vect;
+    // Initializations/
 
     //create root (startWord, no Parent)
     Node *root = newNode(start, nullptr);
 
-    // visited[start] = true;
     q.push(start);
     q_nodes.push(root); // push root to the queue *** might not need for making tree
 
@@ -456,23 +438,152 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
         i_Alist++;
         visited[front] = true;
         i_curr_children = 0;
-
-        // for (int i = 0; i < Alist[front].size(); i++)
-        // {
-
-        //     if (!visited[Alist[front][i]])
-        //     {
-        //         q.push(Alist[front][i]);
-        //         visited[Alist[front][i]] = true;
-        //         //add the all the children for curr
-        //         curr->child.push_back(newNode(Alist[front][i]));
-        //         //add the children to Q of Nodes to look for grandchildren
-        //         q_nodes.push(curr->child[i_curr_children]);
-        //         i_curr_children++;
-        //     }
-        // }
-        // i_curr_children = 0;
     }
-    numMin_paths(root, ladder, target, 0);
-    return 0;
+    num_paths(root, Paths, depths_target_vect, target);
+    numLadders = printMin_Paths(depths_target_vect, Paths);
+    return numLadders;
+}
+
+void Graph::resetVisited()
+{
+    for (int i = 0; i < visited.size(); i++)
+    {
+        visited[i] = false;
+    }
+}
+
+int Graph::getDepth_path(Node *curr, Node *&deepest)
+{
+
+    if (curr == nullptr)
+    {
+        return -1111;
+    }
+
+    queue<Node *> q_node;
+    q_node.push(curr);
+    int sizeOfLevel = 0;
+    //save any node
+    int depthOfTarget = 0; // can be used for max depth aka longest path
+
+    while (!q_node.empty())
+    {
+        sizeOfLevel = q_node.size();
+
+        while (sizeOfLevel > 0)
+        {
+
+            curr = q_node.front();
+            q_node.pop();
+
+            for (int i = 0; i < curr->child.size(); i++)
+            {
+                q_node.push(curr->child[i]);
+                deepest = curr->child[i];
+            }
+            sizeOfLevel--;
+        }
+        depthOfTarget++;
+    }
+    return depthOfTarget;
+}
+
+void Graph::inQ_visited(deque<Node *> q_nodes, vector<bool> &visited)
+{
+    int end = q_nodes.size();
+
+    for (int i = 0; i < end; i++)
+    {
+        visited[q_nodes.front()->index] = true;
+        q_nodes.pop_front();
+    }
+}
+
+void Graph::children_true(Node *curr, vector<bool> &visited)
+{
+
+    for (int i = 0; i < curr->child.size(); i++)
+    {
+        visited[curr->child[i]->index] = true;
+    }
+}
+
+void Graph::longestLadder()
+{
+    // Initializations
+    // queue<Node *> q_nodes; //** Might not need for making tree
+    deque<Node *> q_nodes;
+    int front = -1111;
+    int depth = 0;
+    int max = -1000;
+    Node *curr = nullptr;
+    Node *parent = nullptr;
+    int i_curr_children = 0;
+    int i_Alist = 0;
+    vector<Node *> Paths;
+    vector<tuple<int, int>> depths_target_vect;
+    Node *most_deep = nullptr;
+    Node *max_most_deep = nullptr;
+    int iter = 0;
+    int location = 0;
+    // Initializations/
+
+    for (int j = 0; j < listOfWords.size(); j++)
+    {
+        //create root (startWord, no Parent)
+        Node *root = newNode(j, nullptr);
+        // visited[0] = true;
+
+        q_nodes.push_front(root); // push root to the queue *** might not need for making tree
+
+        while (!q_nodes.empty())
+        {
+
+            curr = q_nodes.back();
+            front = curr->index;
+            visited[root->index] = true;
+
+            if (curr->child.size() > 0)
+            {
+                children_true(curr, visited);
+            }
+
+            for (int i = 0; i < Alist[front].size(); i++)
+            {
+
+                if (!visited[Alist[front][i]])
+                {
+                    // inQ_visited(q_nodes, visited);??
+                    visited[Alist[front][i]] = true;
+                    //add the all the children for curr
+                    curr->child.push_back(newNode(Alist[front][i], curr));
+                    //add the children to Q of Nodes to look for grandchildren
+                    q_nodes.push_back(curr->child[curr->child.size() - 1]);
+
+                    front = Alist[front][i];
+                    i = 0;
+                    curr = curr->child[curr->child.size() - 1];
+                }
+                resetVisited();
+                children_true(curr, visited);
+                inQ_visited(q_nodes, visited);
+            }
+
+            resetVisited();
+            inQ_visited(q_nodes, visited);
+            q_nodes.pop_back();
+            iter++;
+            i_Alist++;
+        }
+
+        depth = getDepth_path(root, most_deep);
+
+        if (depth > max)
+        {
+            max = depth;
+            max_most_deep = most_deep;
+        }
+    }
+    cout << "Longest Ladder in Dictionary: " << max << endl;
+    printLadder(max_most_deep);
 }

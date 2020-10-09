@@ -28,14 +28,19 @@ public:
     // void bfs_helper(vector<int>&, vector<int>&, vector<int>&);
     void removeFromList(vector<string> &, string);
     void printLadder(Node *);
-    void printMin_Paths(vector<tuple<int, int>> &, vector<Node *> &);
-    void numMin_paths(Node *, vector<string> &ladder, int, int);
+    int printMin_Paths(vector<tuple<int, int>> &, vector<Node *> &);
+    void num_paths(Node *, vector<Node *> &Paths, vector<tuple<int, int>> &, int);
     int bfsPathFromTo(string, string, vector<string> &ladder);
     bool isAdjacent(string, string);
     void createAdjacencyList();
     void printVector(vector<string>);
     tuple<int, int> indexOfStart_Target(string, string);
     Node *newNode(int index, Node *parent_index);
+    void longestLadder();
+    int getDepth_path(Node *, Node *&deepest);
+    void resetVisited();
+    void inQ_visited(deque<Node *>, vector<bool> &);
+    void children_true(Node *, vector<bool> &);
 
 private:
     vector<bool> visited;
