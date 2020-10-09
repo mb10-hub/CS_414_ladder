@@ -186,8 +186,8 @@ void Graph::dfsPathFromTo(string startWord, string targetWord, vector<string> &l
     //check if ladder exists
     if (!ladderExists(startWord, targetWord))
     {
-        cout << "No ladder for the pair " << startWord << " and " << targetWord << "exists." << endl;
-        exit(1);
+        cout << "No ladder for the pair " << startWord << " and " << targetWord << " exists." << endl;
+        return;
     }
 
     // iterativley if neighbor add to ladder, if theres no more neighbors then back track one. repeat
@@ -359,8 +359,8 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
     //check if ladder exists
     if (!ladderExists(startWord, targetWord))
     {
-        cout << "No ladder for the pair " << startWord << " and " << targetWord << "exists." << endl;
-        exit(1);
+        cout << "No ladder for the pair " << startWord << " and " << targetWord << " exists." << endl;
+        return;
     }
 
     // Initializations
