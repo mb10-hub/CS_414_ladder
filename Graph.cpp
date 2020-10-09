@@ -181,40 +181,7 @@ bool Graph::ladderExists(string startWord, string targetWord)
     return false;
 }
 
-void Graph::pfs_helper(int start, int target, vector<string> &ladder, int top, bool foundLadder)
-{
-    while (!ladder.empty() || !foundLadder)
-    {
-
-        for (int i = 0; i < listOfWords.size(); i++)
-        {
-
-            if (!visited[i] && isAdjacent(listOfWords[top], listOfWords[i]))
-            {
-                visited[i] = true;
-                ladder.push_back(listOfWords[i]);
-                track.push_back(i);
-
-                if (listOfWords[i] == listOfWords[target])
-                {
-                    foundLadder = true;
-                    return;
-                }
-                top = i;
-                pfs_helper(start, target, ladder, top, foundLadder);
-            }
-        }
-        if (!foundLadder)
-        {
-            ladder.pop_back();
-            track.pop_back();
-            top = track[track.size() - 1];
-        }
-    }
-    return;
-}
-
-void Graph::pfsPathFromTo(string startWord, string targetWord, vector<string> &ladder)
+void Graph::dfsPathFromTo(string startWord, string targetWord, vector<string> &ladder)
 {
     //check if ladder exists
     if (!ladderExists(startWord, targetWord))
@@ -227,40 +194,62 @@ void Graph::pfsPathFromTo(string startWord, string targetWord, vector<string> &l
     tuple<int, int> Start_End = indexOfStart_Target(startWord, targetWord);
     int start = get<0>(Start_End);
     int target = get<1>(Start_End);
-    int top = -1111;
-    stack<int> s;
 
-    s.push(start);
-    visited[start] = true;
+    // Initializations
+    // queue<Node *> q_nodes; //** Might not need for making tree
+    deque<Node *> q_nodes;
+    int front = -1111;
+    Node *curr = nullptr;
+    // Initializations/
+
+    //create root (startWord, no Parent)
+    Node *root = newNode(start, nullptr);
+    // visited[0] = true;
+
+    q_nodes.push_front(root); // push root to the queue *** might not need for making tree
     ladder.push_back(listOfWords[start]);
 
-    while (!s.empty())
+    while (!q_nodes.empty())
     {
-        top = s.top();
-        s.pop();
 
-        for (int i = 0; i < listOfWords.size(); i++)
+        curr = q_nodes.back();
+        front = curr->index;
+        visited[root->index] = true;
+
+        if (curr->child.size() > 0)
+        {
+            children_true(curr, visited);
+        }
+
+        for (int i = 0; i < Alist[front].size(); i++)
         {
 
-            if (!visited[i] && isAdjacent(listOfWords[top], listOfWords[i]))
+            if (!visited[Alist[front][i]])
             {
-                s.push(i);
-                visited[i] = true;
-                ladder.push_back(listOfWords[i]);
-                //what to look for adjacent values for the most recent adjacent member.
-                top = i;
-                //found path to target word.
-                if (listOfWords[i] == targetWord)
+                // inQ_visited(q_nodes, visited);??
+                visited[Alist[front][i]] = true;
+                //add the all the children for curr
+                curr->child.push_back(newNode(Alist[front][i], curr));
+                //add the children to Q of Nodes to look for grandchildren
+                q_nodes.push_back(curr->child[curr->child.size() - 1]);
+                ladder.push_back(listOfWords[curr->child[curr->child.size() - 1]->index]);
+                if (curr->child[curr->child.size() - 1]->index == target)
                 {
                     return;
                 }
-                //start looking from beggining
+
+                front = Alist[front][i];
                 i = 0;
+                curr = curr->child[curr->child.size() - 1];
             }
+            resetVisited();
+            children_true(curr, visited);
+            inQ_visited(q_nodes, visited);
         }
-        //backtrack the vector and the stack. ***stack might be unecessary
-        ladder.pop_back();
-        s.pop();
+
+        resetVisited();
+        inQ_visited(q_nodes, visited);
+        q_nodes.pop_back();
     }
     return;
 }
@@ -512,8 +501,6 @@ void Graph::longestLadder()
     vector<tuple<int, int>> depths_target_vect;
     Node *most_deep = nullptr;
     Node *max_most_deep = nullptr;
-    int iter = 0;
-    int location = 0;
     // Initializations/
 
     for (int j = 0; j < listOfWords.size(); j++)
@@ -560,8 +547,6 @@ void Graph::longestLadder()
             resetVisited();
             inQ_visited(q_nodes, visited);
             q_nodes.pop_back();
-            iter++;
-            i_Alist++;
         }
 
         depth = getDepth_path(root, most_deep);

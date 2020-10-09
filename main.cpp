@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     for (const auto &i : startTargetVector)
     {
         cout << "dfs path for :" << get<0>(i) << " ==> " << get<1>(i) << endl;
-        Graph.pfsPathFromTo(get<0>(i), get<1>(i), ladder);
+        Graph.dfsPathFromTo(get<0>(i), get<1>(i), ladder);
         Graph.printVector(ladder);
     }
 

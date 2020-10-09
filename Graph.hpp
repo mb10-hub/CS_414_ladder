@@ -23,9 +23,7 @@ public:
     int sizeOfConnectedComponent(int i);
     int size() { return listOfWords.size(); }
     bool ladderExists(string, string);
-    void pfsPathFromTo(string, string, vector<string> &ladder);
-    void pfs_helper(int, int, vector<string> &ladder, int, bool);
-    // void bfs_helper(vector<int>&, vector<int>&, vector<int>&);
+    void dfsPathFromTo(string, string, vector<string> &ladder);
     void removeFromList(vector<string> &, string);
     void printLadder(Node *);
     int printMin_Paths(vector<tuple<int, int>> &, vector<Node *> &);
