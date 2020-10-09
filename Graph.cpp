@@ -186,6 +186,7 @@ void Graph::dfsPathFromTo(string startWord, string targetWord, vector<string> &l
     //check if ladder exists
     if (!ladderExists(startWord, targetWord))
     {
+        cout << endl;
         cout << "No ladder for the pair " << startWord << " and " << targetWord << " exists." << endl;
         return;
     }
@@ -220,8 +221,9 @@ void Graph::dfsPathFromTo(string startWord, string targetWord, vector<string> &l
         {
             children_true(curr, visited);
         }
+        int i = 0;
 
-        for (int i = 0; i < Alist[front].size(); i++)
+        while (i < Alist[front].size())
         {
 
             if (!visited[Alist[front][i]])
@@ -241,6 +243,10 @@ void Graph::dfsPathFromTo(string startWord, string targetWord, vector<string> &l
                 front = Alist[front][i];
                 i = 0;
                 curr = curr->child[curr->child.size() - 1];
+            }
+            else
+            {
+                i++;
             }
             resetVisited();
             children_true(curr, visited);
@@ -359,8 +365,9 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
     //check if ladder exists
     if (!ladderExists(startWord, targetWord))
     {
+        cout << endl;
         cout << "No ladder for the pair " << startWord << " and " << targetWord << " exists." << endl;
-        return;
+        return 0;
     }
 
     // Initializations
@@ -501,6 +508,7 @@ void Graph::longestLadder()
     vector<tuple<int, int>> depths_target_vect;
     Node *most_deep = nullptr;
     Node *max_most_deep = nullptr;
+    int i = 0;
     // Initializations/
 
     for (int j = 0; j < listOfWords.size(); j++)
@@ -523,7 +531,7 @@ void Graph::longestLadder()
                 children_true(curr, visited);
             }
 
-            for (int i = 0; i < Alist[front].size(); i++)
+            while (i < Alist[front].size())
             {
 
                 if (!visited[Alist[front][i]])
@@ -538,6 +546,10 @@ void Graph::longestLadder()
                     front = Alist[front][i];
                     i = 0;
                     curr = curr->child[curr->child.size() - 1];
+                }
+                else
+                {
+                    i++;
                 }
                 resetVisited();
                 children_true(curr, visited);

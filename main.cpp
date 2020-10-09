@@ -73,36 +73,54 @@ int main(int argc, char *argv[])
     vector<string> ladder;
     int num_connected_components = Graph.numConnectedComponents();
 
+    cout << "=====================================================================================" << endl;
     cout << "number of connected components: " << num_connected_components << endl;
+    cout << endl;
+    cout << "=====================================================================================" << endl;
 
     for (int i = 0; i < num_connected_components; i++)
     {
         cout << "size of connected component at " << i << ": " << Graph.sizeOfConnectedComponent(i) << endl;
     }
-
+    cout << "=====================================================================================" << endl;
+    cout << endl;
     cout << "size of Graph: " << Graph.size() << endl;
+    cout << endl;
 
+    cout << "=====================================================================================" << endl;
     cout << "Is there a ladder between the pairs: " << endl;
     for (const auto &i : startTargetVector)
     {
         cout << get<0>(i) << " ==> " << get<1>(i) << " : " << Graph.ladderExists(get<0>(i), get<1>(i)) << endl;
     }
 
+    cout << endl;
+
+    cout << "=====================================================================================" << endl;
     cout << "dfs Algorithm: " << endl;
     for (const auto &i : startTargetVector)
     {
+        cout << endl;
         cout << "dfs path for : " << get<0>(i) << " ==> " << get<1>(i) << endl;
         Graph.dfsPathFromTo(get<0>(i), get<1>(i), ladder);
-        Graph.printVector(ladder);
+        if (Graph.ladderExists(get<0>(i), get<1>(i)))
+            Graph.printVector(ladder);
+        ladder.clear();
     }
 
+    cout << endl;
+
+    cout << "=====================================================================================" << endl;
     cout << "bfs Algorithm: " << endl;
     for (const auto &i : startTargetVector)
     {
+        cout << endl;
         cout << "bfs path for : " << get<0>(i) << " ==> " << get<1>(i) << endl;
         Graph.bfsPathFromTo(get<0>(i), get<1>(i), ladder);
-        Graph.printVector(ladder);
+        // Graph.printVector(ladder);
     }
+    cout << "=====================================================================================" << endl;
+    cout << endl;
 
     Graph.longestLadder();
 
