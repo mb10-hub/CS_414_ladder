@@ -4,10 +4,9 @@ using namespace std;
 
 Graph::Graph(const vector<string> &words)
 {
-    cout << "Graph Constructor printing words . . ." << endl;
+
     for (auto word : words)
     {
-        std::cout << word << std::endl;
         listOfWords.push_back(word);
         //create space to push to inside vector
         Alist.push_back(vector<int>());
@@ -120,7 +119,7 @@ int Graph::sizeOfConnectedComponent(int i)
     if (i < 0 || i > connectedComponents.size())
     {
         cout << "Error index is out of bounds: " << endl;
-        return -1111;
+        exit(0);
     }
     return connectedComponents[i].size();
 }
@@ -176,6 +175,8 @@ bool Graph::ladderExists(string startWord, string targetWord)
                 return true;
             }
         }
+        flag1 = false;
+        flag2 = false;
     }
     return false;
 }
@@ -202,11 +203,6 @@ void Graph::pfs_helper(int start, int target, vector<string> &ladder, int top, b
                 top = i;
                 pfs_helper(start, target, ladder, top, foundLadder);
             }
-
-            // else if (visited[i])
-            // {
-            //     ladder.pop_back();
-            // }
         }
         if (!foundLadder)
         {
@@ -220,6 +216,13 @@ void Graph::pfs_helper(int start, int target, vector<string> &ladder, int top, b
 
 void Graph::pfsPathFromTo(string startWord, string targetWord, vector<string> &ladder)
 {
+    //check if ladder exists
+    if (!ladderExists(startWord, targetWord))
+    {
+        cout << "No ladder for the pair " << startWord << " and " << targetWord << "exists." << endl;
+        exit(1);
+    }
+
     // iterativley if neighbor add to ladder, if theres no more neighbors then back track one. repeat
     tuple<int, int> Start_End = indexOfStart_Target(startWord, targetWord);
     int start = get<0>(Start_End);
@@ -261,28 +264,6 @@ void Graph::pfsPathFromTo(string startWord, string targetWord, vector<string> &l
     }
     return;
 }
-
-// void Graph::bfs_helper(vector<int> &startList, vector<int> &unionList, vector<int> &targetList, string startWord, string targetWord)
-// {
-//     tuple<int, int> Start_End = indexOfStart_Target(startWord, targetWord);
-//     int start = get<0>(Start_End);
-//     int target = get<1>(Start_End);
-
-//     for (int i = 0; i < Alist.size(); i++)
-//     {
-//         for (int j = 0; j < Alist[i].size(); j++)
-//         {
-//             if (i == start)
-//             {
-//                 startList.push_back(Alist[start][j]);
-//             }
-//             if (i == target)
-//             {
-//                 targetList.push_back(Alist[target][j]);
-//             }
-//         }
-//     }
-// }
 
 Node *Graph::newNode(int index, Node *parent_index)
 {
@@ -386,6 +367,13 @@ void Graph::num_paths(Node *root, vector<Node *> &Paths, vector<tuple<int, int>>
 
 int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &ladder)
 {
+    //check if ladder exists
+    if (!ladderExists(startWord, targetWord))
+    {
+        cout << "No ladder for the pair " << startWord << " and " << targetWord << "exists." << endl;
+        exit(1);
+    }
+
     // Initializations
     tuple<int, int> Start_End = indexOfStart_Target(startWord, targetWord);
     int start = get<0>(Start_End);
