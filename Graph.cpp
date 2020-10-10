@@ -17,12 +17,24 @@ Graph::Graph(const vector<string> &words)
     addedToList.resize(words.size());
 }
 
-void Graph::printVector(vector<string> ladder)
+void Graph::printVector(vector<string> ladder, string fileName)
 {
+    ofstream oFile;
+    oFile.open(fileName);
+    if (!oFile.is_open())
+    {
+        cout << "Could not open file " << fileName << endl;
+        return;
+    }
+
+    int i = 1;
     for (auto word : ladder)
     {
-        std::cout << word << std::endl;
+        oFile << i << ": " << word << endl;
+        std::cout << i << ": " << word << std::endl;
+        i++;
     }
+    oFile.close();
 }
 
 void Graph::createAdjacencyList()
@@ -268,26 +280,27 @@ Node *Graph::newNode(int index, Node *parent_index)
     return temp;
 }
 
-void Graph::printLadder(Node *grandChild)
+void Graph::printLadder(Node *grandChild, vector<string> &ladder)
 {
-    vector<int> ladder;
-    ladder.push_back(grandChild->index);
+    vector<int> ladder2;
+    ladder2.push_back(grandChild->index);
     int iter = 0;
 
     while (grandChild->parent != nullptr)
     {
-        ladder.push_back(grandChild->parent->index);
+        ladder2.push_back(grandChild->parent->index);
         grandChild = grandChild->parent;
     }
 
-    for (int i = ladder.size() - 1; i >= 0; i--)
+    for (int i = ladder2.size() - 1; i >= 0; i--)
     {
-        cout << iter + 1 << ": " << listOfWords[ladder[i]] << endl;
+        // cout << iter + 1 << ": " << listOfWords[ladder2[i]] << endl;
         iter++;
+        ladder.push_back(listOfWords[ladder2[i]]);
     }
 }
 
-int Graph::printMin_Paths(vector<tuple<int, int>> &depths_target_vect, vector<Node *> &minPaths)
+int Graph::printMin_Paths(vector<tuple<int, int>> &depths_target_vect, vector<Node *> &minPaths, vector<string> &ladder)
 {
     int min = 1000;
     int startAfter_i = 0;
@@ -304,12 +317,12 @@ int Graph::printMin_Paths(vector<tuple<int, int>> &depths_target_vect, vector<No
             numMins = get<0>(i);
         }
     }
-    cout << endl;
-    cout << "Number of min ladders: " << numMins << endl;
-    for (int i = startAfter_i; i < end_i; i++)
-    {
-        printLadder(minPaths[startAfter_i]);
-    }
+    // cout << endl;
+    // cout << "Number of min ladders: " << numMins << endl;
+    // for (int i = startAfter_i; i < end_i; i++)
+    // {
+    printLadder(minPaths[startAfter_i], ladder);
+    // }
     return numMins;
 }
 
@@ -401,7 +414,7 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
         q.pop();
         q_nodes.pop();
 
-        ladder.push_back(listOfWords[front]);
+        // ladder.push_back(listOfWords[front]);
 
         if (i_Alist < Alist.size())
         {
@@ -424,7 +437,7 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
         i_curr_children = 0;
     }
     num_paths(root, Paths, depths_target_vect, target);
-    numLadders = printMin_Paths(depths_target_vect, Paths);
+    numLadders = printMin_Paths(depths_target_vect, Paths, ladder);
     return numLadders;
 }
 
@@ -492,7 +505,7 @@ void Graph::children_true(Node *curr, vector<bool> &visited)
     }
 }
 
-void Graph::longestLadder()
+void Graph::longestLadder(vector<string> &ladder)
 {
     // Initializations
     // queue<Node *> q_nodes; //** Might not need for making tree
@@ -570,5 +583,6 @@ void Graph::longestLadder()
         }
     }
     cout << "Longest Ladder in Dictionary: " << max << endl;
-    printLadder(max_most_deep);
+
+    printLadder(max_most_deep, ladder);
 }

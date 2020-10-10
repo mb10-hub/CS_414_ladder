@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     cout << endl;
     Graph.createAdjacencyList();
     vector<string> ladder;
+    string filename;
     int num_connected_components = Graph.numConnectedComponents();
 
     cout << "=====================================================================================" << endl;
@@ -100,11 +101,13 @@ int main(int argc, char *argv[])
     cout << "dfs Algorithm: " << endl;
     for (const auto &i : startTargetVector)
     {
+        // filename = get<0>(i) + "_" + get<1>(i) + ".txt";
         cout << endl;
+        cout << filename << endl;
         cout << "dfs path for : " << get<0>(i) << " ==> " << get<1>(i) << endl;
         Graph.dfsPathFromTo(get<0>(i), get<1>(i), ladder);
         if (Graph.ladderExists(get<0>(i), get<1>(i)))
-            Graph.printVector(ladder);
+            Graph.printVector(ladder, filename);
         ladder.clear();
     }
 
@@ -114,15 +117,20 @@ int main(int argc, char *argv[])
     cout << "bfs Algorithm: " << endl;
     for (const auto &i : startTargetVector)
     {
+        // filename = get<0>(i) + "_" + get<1>(i) + ".txt";
         cout << endl;
+        cout << filename << endl;
         cout << "bfs path for : " << get<0>(i) << " ==> " << get<1>(i) << endl;
         Graph.bfsPathFromTo(get<0>(i), get<1>(i), ladder);
-        // Graph.printVector(ladder);
+        if (Graph.ladderExists(get<0>(i), get<1>(i)))
+            Graph.printVector(ladder, filename);
+        ladder.clear();
     }
     cout << "=====================================================================================" << endl;
     cout << endl;
 
-    Graph.longestLadder();
+    Graph.longestLadder(ladder);
+    Graph.printVector(ladder, "longest_ladder.txt");
 
     return 0;
 }

@@ -1,0 +1,25 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "/Users/marcobarragan/Downloads/sampleInput"
+	}
+],
+  "settings": {
+    "files.associations": {
+      "vector": "cpp",
+      "tuple": "cpp",
+      "stack": "cpp",
+      "string": "cpp",
+      "iosfwd": "cpp",
+      "queue": "cpp",
+      "iostream": "cpp",
+      "__split_buffer": "cpp",
+      "array": "cpp",
+      "deque": "cpp",
+      "string_view": "cpp"
+    }
+  }
+}
