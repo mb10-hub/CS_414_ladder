@@ -264,7 +264,7 @@ void Graph::dfsPathFromTo(string startWord, string targetWord, vector<string> &l
             children_true(curr, visited);
             inQ_visited(q_nodes, visited);
         }
-
+	i = 0;
         resetVisited();
         inQ_visited(q_nodes, visited);
         q_nodes.pop_back();
@@ -545,6 +545,7 @@ void Graph::longestLadder(vector<string> &ladder)
             }
 
             while (i < Alist[front].size())
+            // for (int i = 0; i < Alist[front].size(); i++)
             {
 
                 if (!visited[Alist[front][i]])
@@ -568,7 +569,7 @@ void Graph::longestLadder(vector<string> &ladder)
                 children_true(curr, visited);
                 inQ_visited(q_nodes, visited);
             }
-
+	    i = 0;
             resetVisited();
             inQ_visited(q_nodes, visited);
             q_nodes.pop_back();
