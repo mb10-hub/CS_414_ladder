@@ -403,10 +403,7 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
 
     //create root (startWord, no Parent)
     Node *root = newNode(start, nullptr);
-
     resetVisited();
-
-    // q.push(start);
     q_nodes.push_front(root); // push root to the queue *** might not need for making tree
 
     while (!q_nodes.empty())
@@ -422,15 +419,10 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
             children_true(curr, visited);
         }
 
-        // if (i_Alist < Alist.size())
-        // {
-        // for (int i = 0; i < Alist[front].size(); i++)
         while (i < Alist[front].size())
         {
-            // if (((curr->parent == nullptr || Alist[front][i] != curr->parent->index) && (curr->index != Alist[front][i])) && Alist[front][i] != start && curr->index != target)
             if (!visited[Alist[front][i]])
             {
-                // q.push(Alist[front][i]);
                 visited[Alist[front][i]] = true;
                 //add the all the children for curr
                 curr->child.push_back(newNode(Alist[front][i], curr));
@@ -439,14 +431,9 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
                 i_curr_children++;
             }
             i++;
-            // resetVisited();
-            // children_true(curr, visited);
-            // inQ_visited(q_nodes, visited);
         }
         // }
         i = 0;
-        // resetVisited();
-        // inQ_visited(q_nodes, visited);
         q_nodes.pop_front();
         i_Alist++;
         i_curr_children = 0;
