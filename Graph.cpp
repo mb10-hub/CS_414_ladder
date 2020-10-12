@@ -264,7 +264,7 @@ void Graph::dfsPathFromTo(string startWord, string targetWord, vector<string> &l
             children_true(curr, visited);
             inQ_visited(q_nodes, visited);
         }
-	i = 0;
+        i = 0;
         resetVisited();
         inQ_visited(q_nodes, visited);
         q_nodes.pop_back();
@@ -387,8 +387,8 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
     tuple<int, int> Start_End = indexOfStart_Target(startWord, targetWord);
     int start = get<0>(Start_End);
     int target = get<1>(Start_End);
-    queue<int> q;
-    queue<Node *> q_nodes; //** Might not need for making tree
+    // queue<int> q;
+    deque<Node *> q_nodes; //** Might not need for making tree
     int front = -1111;
     int numLadders = 0;
     int depth = 0;
@@ -398,42 +398,57 @@ int Graph::bfsPathFromTo(string startWord, string targetWord, vector<string> &la
     int i_Alist = 0;
     vector<Node *> Paths;
     vector<tuple<int, int>> depths_target_vect;
+    int i = 0;
     // Initializations/
 
     //create root (startWord, no Parent)
     Node *root = newNode(start, nullptr);
 
-    q.push(start);
-    q_nodes.push(root); // push root to the queue *** might not need for making tree
+    resetVisited();
 
-    while (!q.empty())
+    // q.push(start);
+    q_nodes.push_front(root); // push root to the queue *** might not need for making tree
+
+    while (!q_nodes.empty())
     {
 
-        front = q.front();
+        front = q_nodes.front()->index;
         curr = q_nodes.front();
-        q.pop();
-        q_nodes.pop();
-
-        // ladder.push_back(listOfWords[front]);
-
-        if (i_Alist < Alist.size())
-        {
-            for (int i = 0; i < Alist[front].size(); i++)
-            {
-                if (((curr->parent == nullptr || Alist[front][i] != curr->parent->index) && (curr->index != Alist[front][i])) && Alist[front][i] != start && curr->index != target)
-                {
-                    q.push(Alist[front][i]);
-                    visited[Alist[front][i]] = true;
-                    //add the all the children for curr
-                    curr->child.push_back(newNode(Alist[front][i], curr));
-                    //add the children to Q of Nodes to look for grandchildren
-                    q_nodes.push(curr->child[i_curr_children]);
-                    i_curr_children++;
-                }
-            }
-        }
-        i_Alist++;
+        // q.pop();
         visited[front] = true;
+
+        if (curr->child.size() > 0)
+        {
+            children_true(curr, visited);
+        }
+
+        // if (i_Alist < Alist.size())
+        // {
+        // for (int i = 0; i < Alist[front].size(); i++)
+        while (i < Alist[front].size())
+        {
+            // if (((curr->parent == nullptr || Alist[front][i] != curr->parent->index) && (curr->index != Alist[front][i])) && Alist[front][i] != start && curr->index != target)
+            if (!visited[Alist[front][i]])
+            {
+                // q.push(Alist[front][i]);
+                visited[Alist[front][i]] = true;
+                //add the all the children for curr
+                curr->child.push_back(newNode(Alist[front][i], curr));
+                //add the children to Q of Nodes to look for grandchildren
+                q_nodes.push_back(curr->child[i_curr_children]);
+                i_curr_children++;
+            }
+            i++;
+            // resetVisited();
+            // children_true(curr, visited);
+            // inQ_visited(q_nodes, visited);
+        }
+        // }
+        i = 0;
+        // resetVisited();
+        // inQ_visited(q_nodes, visited);
+        q_nodes.pop_front();
+        i_Alist++;
         i_curr_children = 0;
     }
     num_paths(root, Paths, depths_target_vect, target);
@@ -569,7 +584,7 @@ void Graph::longestLadder(vector<string> &ladder)
                 children_true(curr, visited);
                 inQ_visited(q_nodes, visited);
             }
-	    i = 0;
+            i = 0;
             resetVisited();
             inQ_visited(q_nodes, visited);
             q_nodes.pop_back();

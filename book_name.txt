@@ -1,0 +1,9 @@
+1: book
+2: bock
+3: back
+4: balk
+5: bale
+6: bade
+7: fade
+8: fame
+9: name
