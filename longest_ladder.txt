@@ -1,8 +1,10 @@
-1: tate
-2: rate
-3: bate
-4: kate
-5: fate
-6: fade
-7: fake
-8: lake
+8
+
+tate
+rate
+bate
+kate
+fate
+fade
+fake
+lake

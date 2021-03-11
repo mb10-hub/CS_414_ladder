@@ -34,7 +34,7 @@ public:
     int bfsPathFromTo(string, string, vector<string> &ladder);
     bool isAdjacent(string, string);
     void createAdjacencyList();
-    void printVector(vector<string>, string);
+    void printVector(vector<string>, string, int);
     tuple<int, int> indexOfStart_Target(string, string);
     Node *newNode(int index, Node *parent_index);
     void longestLadder(vector<string> &ladder);

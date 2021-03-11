@@ -552,6 +552,7 @@ void Graph::longestLadder(vector<string> &ladder)
 
         while (!q_nodes.empty())
         {
+
             curr = q_nodes.back();
             front = curr->index;
             visited[root->index] = true;
@@ -604,3 +605,4 @@ void Graph::longestLadder(vector<string> &ladder)
 
     printLadder(max_most_deep, ladder);
 }
+OB

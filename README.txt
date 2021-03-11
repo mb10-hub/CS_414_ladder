@@ -1,3 +1,5 @@
+Graph of nodes in C++ for a Dictionary of words. Graph Algorithms can be applied to the Graph such has Breadth First Search and Depth First Search.
+
 ---------------------Introduction---------------------
 This program is based on a dictionary, each word has four letters.
 This program builds a Adjacency Graph.
@@ -16,7 +18,7 @@ No bugs if you
 Compile: g++ -g -std=c++17 *.cpp -o x
 Execute: ./x data.txt data_pairs.txt 
 
-EXAMPLE:
+EXAMPLE of File inputs:
 
 data.txt:   data_pairs.txt 
     fake     fate kate                   

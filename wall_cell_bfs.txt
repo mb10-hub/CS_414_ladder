@@ -1,0 +1,6 @@
+4 1
+
+wall
+ball
+bell
+cell
